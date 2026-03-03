@@ -25,8 +25,8 @@ function processFiles() {
                 const isImportant = todo.includes('!');
                 let body;
                 if (todo.includes(';')){
-                    let [name, data, ...text] = todo.split(';');
-                    body = {name: name.toLowerCase().trim(), data: data.trim(), text: text.join(';').trim()};
+                    let [name, date, ...text] = todo.split(';');
+                    body = {name: name.toLowerCase(), date : date.trim(), text: text.join(';').trim()};
                 }
                 else {
                     body = {text : todo};
@@ -101,8 +101,8 @@ function sortCommand(args) {
     }
     else if (args === 'date') {
         for (const todo of todos.splice(0).sort((a, b) => {
-            if (a.body.data && b.body.data) {
-                return new Date(b.body.data) - new Date(a.body.data);
+            if (a.body.date && b.body.date) {
+                return new Date(b.body.date) - new Date(a.body.date);
             }
             return 0;
         })) {
@@ -111,6 +111,18 @@ function sortCommand(args) {
     }
     else{
         console.log('wrong command');
+    }
+}
+
+function dateCommand(...args) {
+    let dateString = '';
+    for (const arg of args) {
+        dateString += arg + '-';
+    }
+    dateString = dateString.slice(0, -1);
+    const date = new Date(dateString);
+    for (const todo of todos.filter(todo => todo.body.date && new Date(todo.body.date) > date)) {
+        console.log(todo.body.text);
     }
 }
 
@@ -130,6 +142,9 @@ function processCommand(command, ...args) {
             break;
         case 'sort':
             sortCommand(args[0]);
+            break;
+        case 'date':
+            dateCommand(...args);
             break;
         default:
             console.log('wrong command');
