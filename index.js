@@ -26,7 +26,7 @@ function processFiles() {
                 let body;
                 if (todo.includes(';')){
                     let [name, data, ...text] = todo.split(';');
-                    body = {name: name.toLowerCase(), data, text: text.join(';').trim()};
+                    body = {name: name.toLowerCase().trim(), data: data.trim(), text: text.join(';').trim()};
                 }
                 else {
                     body = {text : todo};
@@ -40,24 +40,32 @@ function processFiles() {
     }
 }
 
-
-function showCommand() {
-    for (const todo of todos)
-        console.log(todo.body.text);
+function getImportantComments() {
+    return todos.filter(todo => todo.important);
 }
 
 function showImportantCommand() {
-    for (const todo of todos.filter(todo => todo.important))
-        console.log(todo.body.text);
+    showComments(getImportantComments());
 }
 
 function getUserComments(username) {
     return todos.filter(todo => todo.body?.name === username);
 }
 
+function formatColumn(str, maxLength) {
+    const formatted = str.length > maxLength ? str.substring(0, maxLength - 3) + '...' : str;
+    return formatted.padEnd(maxLength, ' ');
+}
+
 function showComments(comments) {
     for (const comment of comments)
-        console.log(comment.body.text);
+    {
+        const importanceColumn = comment.important ? '!' : ' ';
+        const usernameColumn = comment.body.name ? formatColumn(comment.body.name, 10) : formatColumn('', 10);
+        const dateColumn = comment.body.data ? formatColumn(comment.body.data, 12) : formatColumn('', 12);
+        const commentColumn = formatColumn(comment.body.text, 50);
+        console.log(`${importanceColumn}  |  ${usernameColumn}|  ${dateColumn}|  ${commentColumn}`);
+    }
 }
 
 function showUserCommand(username) {
@@ -118,7 +126,7 @@ function processCommand(command, ...args) {
             showImportantCommand();
             break;
         case 'show':
-            showCommand();
+            showComments(todos);
             break;
         case 'sort':
             sortCommand(args[0]);
