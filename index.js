@@ -43,18 +43,19 @@ function showCommand() {
         console.log(todo);
 }
 
+function showImportantCommand() {
+    for (const todo of todos.filter(todo => todo.important))
+        console.log(todo);
+}
+
 function processCommand(command) {
     processFiles();
     switch (command) {
-        case 'exit': {
+        case 'exit':
             process.exit(0);
         case 'important':
-            console.log(todos.filter(todo => todo.important));
+            showImportantCommand();
             break;
-        case 'show':
-            console.log(todos.filter(todo => !todo.important));
-            break;
-        }
         case 'show':
             showCommand();
             break;
