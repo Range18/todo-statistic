@@ -16,10 +16,23 @@ var todos = [];
 function processFiles() {
     for (const line of files) {
         if (line.includes('TODO')) {
-            const todo = line.substring(line.indexOf('TODO') + 4, line.indexOf('\\n')).trim();
-            if (!todos.includes(todo))
-            {
-                todos.push(todo);
+            const todoIndex = line.indexOf('TODO') + 4;
+            const todo = line.substring(todoIndex, line.indexOf('\n', todoIndex)).trim();
+            if (todo.includes('!')) {
+                todos.push(
+                    {
+                        body: todo,
+                        important: true,
+                    }
+                )
+            }
+            else {
+                todos.push(
+                    {
+                        body: todo,
+                        important: false,
+                    }
+                )
             }
         }
     }
@@ -35,12 +48,18 @@ function processCommand(command) {
     switch (command) {
         case 'exit': {
             process.exit(0);
+        case 'important':
+            console.log(todos.filter(todo => todo.important));
+            break;
+        case 'show':
+            console.log(todos.filter(todo => !todo.important));
             break;
         }
         case 'show':
             showCommand();
             break;
         default:
+            console.log(todos);
             console.log('wrong command');
             break;
     }
