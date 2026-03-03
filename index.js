@@ -72,28 +72,31 @@ function showUserCommand(username) {
 function sortCommand(args) {
     if (args === 'importance') {
         for (const todo of todos.splice().sort((a, b) => b.body.text.count('!') - a.body.text.count('!'))) {
-            console.log(todo.body);
+            console.log(todo.body.text);
         }       
     }
     else if (args === 'user') {
-        for (const todo of todos.splice().sort((a, b) => {
+        for (const todo of todos.splice(0).sort((a, b) => {
             if (a.body.name && b.body.name) {
                 return a.body.name.localeCompare(b.body.name);
             }
             return 0;
         })) {
-            console.log(todo.body);
+            console.log(todo.body.text);
         }
     }
     else if (args === 'date') {
-        for (const todo of todos.splice().sort((a, b) => {
+        for (const todo of todos.splice(0).sort((a, b) => {
             if (a.body.data && b.body.data) {
-                return new Date(a.body.data) - new Date(b.body.data);
+                return new Date(b.body.data) - new Date(a.body.data);
             }
             return 0;
         })) {
-            console.log(todo.body);
+            console.log(todo.body.text);
         }
+    }
+    else{
+        console.log('wrong command');
     }
 }
 
