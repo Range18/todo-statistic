@@ -11,7 +11,19 @@ function getFiles() {
     return filePaths.map(path => readFile(path));
 }
 
-function processCommand(command) {
+
+var todos = []
+
+function processFiles() {
+    for (const line of files) {
+        if (line.includes('TODO')) {
+            const todo = line.substring(line.indexOf('TODO') + 4).trim();
+            todos.push(todo);
+        }
+    }
+}
+
+function processCommand(command) {  
     switch (command) {
         case 'exit':
             process.exit(0);
@@ -21,5 +33,6 @@ function processCommand(command) {
             break;
     }
 }
+
 
 // TODO you can do it!
