@@ -14,25 +14,27 @@ function getFiles() {
 var todos = [];
 
 function processFiles() {
-    for (const line of files) {
-        if (line.includes('TODO')) {
-            const todoIndex = line.indexOf('TODO') + 4;
-            const todo = line.substring(todoIndex, line.indexOf('\n', todoIndex)).trim();
-            if (todo.includes('!')) {
-                todos.push(
-                    {
-                        body: todo,
-                        important: true,
-                    }
-                )
-            }
-            else {
-                todos.push(
-                    {
-                        body: todo,
-                        important: false,
-                    }
-                )
+    for (const file of files) {
+        for (const line of file.split('\n')) {
+            if (line.includes('// TODO')) {
+                const todoIndex = line.indexOf('// TODO') + 7;
+                const todo = line.substring(todoIndex).trim();
+                if (todo.includes('!')) {
+                    todos.push(
+                        {
+                            body: todo,
+                            important: true,
+                        }
+                    )
+                }
+                else {
+                    todos.push(
+                        {
+                            body: todo,
+                            important: false,
+                        }
+                    )
+                }
             }
         }
     }
@@ -40,12 +42,12 @@ function processFiles() {
 
 function showCommand() {
     for (const todo of todos)
-        console.log(todo);
+        console.log(todo.body);
 }
 
 function showImportantCommand() {
     for (const todo of todos.filter(todo => todo.important))
-        console.log(todo);
+        console.log(todo.body);
 }
 
 function processCommand(command) {
