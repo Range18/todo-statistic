@@ -51,6 +51,34 @@ function showImportantCommand() {
         console.log(todo.body);
 }
 
+function sortCommand(args) {
+    if (args === 'importance') {
+        for (const todo of todos.splice().sort((a, b) => b.body.text.count('!') - a.body.text.count('!'))) {
+            console.log(todo.body);
+        }       
+    }
+    else if (args === 'user') {
+        for (const todo of todos.splice().sort((a, b) => {
+            if (a.body.name && b.body.name) {
+                return a.body.name.localeCompare(b.body.name);
+            }
+            return 0;
+        })) {
+            console.log(todo.body);
+        }
+    }
+    else if (args === 'date') {
+        for (const todo of todos.splice().sort((a, b) => {
+            if (a.body.data && b.body.data) {
+                return new Date(a.body.data) - new Date(b.body.data);
+            }
+            return 0;
+        })) {
+            console.log(todo.body);
+        }
+    }
+}
+
 function processCommand(command, ...args) {
     processFiles();
     switch (command) {
@@ -63,9 +91,9 @@ function processCommand(command, ...args) {
             showCommand();
             break;
         case 'sort':
-
+            sortCommand(args[0].trim());
+            break;
         default:
-            console.log(todos);
             console.log('wrong command');
             break;
     }
