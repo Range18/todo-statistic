@@ -1,5 +1,6 @@
 const {getAllFilePathsWithExtension, readFile} = require('./fileSystem');
 const {readLine} = require('./console');
+const fs = require('fs');
 
 const files = getFiles();
 
@@ -11,13 +12,15 @@ function getFiles() {
     return filePaths.map(path => readFile(path));
 }
 
+const commentStartWith = JSON.parse(fs.readFileSync('secret.json', 'utf8'))["commentStartWith"];
+
 var todos = [];
 
 function processFiles() {
     for (const file of files) {
         for (const line of file.split('\n')) {
-            if (line.includes('// TODO')) {
-                const todoIndex = line.indexOf('// TODO') + 7;
+            if (line.includes(commentStartWith)) {
+                const todoIndex = line.indexOf(commentStartWith) + 7;
                 const todo = line.substring(todoIndex).trim();
                 if (todo.includes('!')) {
                     todos.push(
