@@ -26,7 +26,7 @@ function processFiles() {
                 let body;
                 if (todo.includes(';')){
                     let [name, data, ...text] = todo.split(';');
-                    body = {name, data, text};
+                    body = {name: name.toLowerCase(), data, text};
                 }
                 else {
                     body = {text : todo};
@@ -43,17 +43,38 @@ function processFiles() {
 
 function showCommand() {
     for (const todo of todos)
-        console.log(todo.body);
+        console.log(todo.body.text);
 }
 
 function showImportantCommand() {
     for (const todo of todos.filter(todo => todo.important))
-        console.log(todo.body);
+        console.log(todo.body.text);
+}
+
+function getUserComments(username) {
+    return todos.filter(todo => todo.body?.name === username);
+}
+
+function showComments(comments) {
+    for (const comment of comments)
+        console.log(comment.body.text);
+}
+
+function showUserCommand(username) {
+    if (username === undefined) {
+        console.log('Please, write username!');
+        return;
+    }
+    const userComments = getUserComments(username.toLowerCase());
+    showComments(userComments);
 }
 
 function processCommand(command, ...args) {
     processFiles();
     switch (command) {
+        case 'user':
+            showUserCommand(args[0]);
+            break;
         case 'exit':
             process.exit(0);
         case 'important':
@@ -63,7 +84,7 @@ function processCommand(command, ...args) {
             showCommand();
             break;
         case 'sort':
-
+            break;
         default:
             console.log(todos);
             console.log('wrong command');

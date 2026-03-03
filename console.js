@@ -5,7 +5,8 @@ function readLine(callback) {
         const chunk = process.stdin.read();
         if (chunk !== null) {
             const line = chunk.trim();
-            callback(line);
+            const [command, ...args] = line.split(' ');
+            callback(command, ...args);
         }
     });
 }
