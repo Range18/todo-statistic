@@ -11,22 +11,34 @@ function getFiles() {
     return filePaths.map(path => readFile(path));
 }
 
-
-var todos = []
+var todos = [];
 
 function processFiles() {
     for (const line of files) {
         if (line.includes('TODO')) {
-            const todo = line.substring(line.indexOf('TODO') + 4).trim();
-            todos.push(todo);
+            const todo = line.substring(line.indexOf('TODO') + 4, line.indexOf('\\n')).trim();
+            if (!todos.includes(todo))
+            {
+                todos.push(todo);
+            }
         }
     }
 }
 
-function processCommand(command) {  
+function showCommand() {
+    for (const todo of todos)
+        console.log(todo);
+}
+
+function processCommand(command) {
+    processFiles();
     switch (command) {
-        case 'exit':
+        case 'exit': {
             process.exit(0);
+            break;
+        }
+        case 'show':
+            showCommand();
             break;
         default:
             console.log('wrong command');
