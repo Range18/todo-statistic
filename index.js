@@ -26,7 +26,7 @@ function processFiles() {
                 let body;
                 if (todo.includes(';')){
                     let [name, data, ...text] = todo.split(';');
-                    body = {name: name.toLowerCase(), data, text};
+                    body = {name: name.toLowerCase(), data, text: text.join(';').trim()};
                 }
                 else {
                     body = {text : todo};
@@ -69,14 +69,20 @@ function showUserCommand(username) {
     showComments(userComments);
 }
 
+function countSubstr(str, sub) {
+    if (sub === "") return 0;
+    return str.split(sub).length - 1;
+}
+
 function sortCommand(args) {
     if (args === 'importance') {
-        for (const todo of todos.splice().sort((a, b) => b.body.text.count('!') - a.body.text.count('!'))) {
-            console.log(todo.body);
+        const todosCopy = todos.splice(0).sort((a, b) => countSubstr(b.body.text, '!') - countSubstr(a.body.text, '!'));
+        for (const todo of todosCopy) {
+            console.log(todo.body.text);
         }       
     }
     else if (args === 'user') {
-        for (const todo of todos.splice().sort((a, b) => {
+        for (const todo of todos.splice(0).sort((a, b) => {
             if (a.body.name && b.body.name) {
                 return a.body.name.localeCompare(b.body.name);
             }
@@ -86,7 +92,7 @@ function sortCommand(args) {
         }
     }
     else if (args === 'date') {
-        for (const todo of todos.splice().sort((a, b) => {
+        for (const todo of todos.splice(0).sort((a, b) => {
             if (a.body.data && b.body.data) {
                 return new Date(a.body.data) - new Date(b.body.data);
             }
