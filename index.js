@@ -88,18 +88,21 @@ function sortCommand(args) {
             }
             return 0;
         })) {
-            console.log(todo.body);
+            console.log(todo.body.text);
         }
     }
     else if (args === 'date') {
         for (const todo of todos.splice(0).sort((a, b) => {
             if (a.body.data && b.body.data) {
-                return new Date(a.body.data) - new Date(b.body.data);
+                return new Date(b.body.data) - new Date(a.body.data);
             }
             return 0;
         })) {
-            console.log(todo.body);
+            console.log(todo.body.text);
         }
+    }
+    else{
+        console.log('wrong command');
     }
 }
 
