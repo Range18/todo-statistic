@@ -22,26 +22,24 @@ function processFiles() {
             if (line.includes(commentStartWith)) {
                 const todoIndex = line.indexOf(commentStartWith) + 7;
                 const todo = line.substring(todoIndex).trim();
-                if (todo.includes('!')) {
-                    todos.push(
-                        {
-                            body: todo,
-                            important: true,
-                        }
-                    )
+                const isImportant = todo.includes('!');
+                let body;
+                if (todo.includes(';')){
+                    let [name, data, ...text] = todo.split(';');
+                    body = {name, data, text};
                 }
                 else {
-                    todos.push(
-                        {
-                            body: todo,
-                            important: false,
-                        }
-                    )
+                    body = {text : todo};
                 }
+                todos.push({
+                    body: body,
+                    important: isImportant,
+                });
             }
         }
     }
 }
+
 
 function showCommand() {
     for (const todo of todos)
@@ -53,7 +51,7 @@ function showImportantCommand() {
         console.log(todo.body);
 }
 
-function processCommand(command) {
+function processCommand(command, ...args) {
     processFiles();
     switch (command) {
         case 'exit':
@@ -64,6 +62,8 @@ function processCommand(command) {
         case 'show':
             showCommand();
             break;
+        case 'sort':
+
         default:
             console.log(todos);
             console.log('wrong command');
