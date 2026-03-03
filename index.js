@@ -18,7 +18,22 @@ function processFiles() {
     for (const line of files) {
         if (line.includes('TODO')) {
             const todo = line.substring(line.indexOf('TODO') + 4).trim();
-            todos.push(todo);
+            if (todo.includes('!')) {
+                todos.push(
+                    {
+                        body: todo,
+                        important: true,
+                    }
+                )
+            }
+            else {
+                todos.push(
+                    {
+                        body: todo,
+                        important: false,
+                    }
+                )
+            }
         }
     }
 }
@@ -27,6 +42,9 @@ function processCommand(command) {
     switch (command) {
         case 'exit':
             process.exit(0);
+            break;
+        case 'important':
+            console.log(todos.filter(todo => todo.important));
             break;
         default:
             console.log('wrong command');
